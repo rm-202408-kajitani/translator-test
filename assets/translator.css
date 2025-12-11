@@ -1,0 +1,93 @@
+body{
+  /* 翻訳時に追加されるスタイルを打ち消す */
+  position: static !important;
+  top: 0 !important;
+  /* staticにしてるので不要(一応追加) */
+}
+
+.translate_container{
+  position: fixed;
+  right: 20px;
+  top: 20px;
+}
+
+/* 初期表示 */
+#google_translate_element{
+  display: none;
+}
+
+.translate_trigger{
+  background: #000;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  height: 60px;
+  padding: 10px 20px;
+  width: 180px;
+}
+
+#custom_lang_dropdown{
+  opacity: 0;
+  pointer-events: none;
+  position: absolute; 
+  background: rgb(255 255 255/ 90%);
+  right: 0;
+  top: 100%;
+  transition: opacity 0.2s, visibility 0.2s;
+  visibility: hidden;
+  width: 100%;
+  z-index: 1;
+}
+
+/* 翻訳ボタンクリック後 */
+.show-translate #custom_lang_dropdown{
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.skiptranslate > iframe{
+  display: none;
+}
+
+/* 「原文」のツールチップを非表示 */
+#goog-gt-tt{
+  display: none !important;
+}
+
+/* ツールチップ中身 */
+.custom_lang_list{
+  border: 1px solid #cccccc;
+  display: grid;
+  gap: 5px;
+  /* grid-template-columns: repeat(2, 1fr); */
+  margin: 0;
+  padding: 5px;
+}
+
+/* 各言語 */
+.custom-lang-item{
+  background-color: #cccccc;
+  color: #333333;
+  cursor: pointer;
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 8px 10px;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color .2s;
+}
+
+.custom-lang-item:hover,
+.custom-lang-item:focus{
+  background-color: #f0f0f0;
+  outline: none;
+
+}
+
+.lang-label{
+  font-size: 14px;
+}
+

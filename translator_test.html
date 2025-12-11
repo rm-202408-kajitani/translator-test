@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>翻訳ボタンテストページ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="./assets/translator.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+
+        .settings {
+            background-color: #f9f9f9;
+            border: 1px solid #cccccc;
+            line-break: strict;
+            margin-top: 40px;
+            overflow-wrap: anywhere;
+            padding: 20px;
+            word-break: normal;
+        }
+
+        .settings pre {
+            background-color: #f9f9f9;
+            border: 1px solid #cccccc;
+            color: #444444;
+            margin-top: 10px;
+            overflow-x: scroll;
+            padding: 20px;
+        }
+
+        .settings h2 {
+            margin-top: 0;
+        }
+
+        .faq {
+            margin-block: 40px;
+        }
+
+        .faq-list {
+            margin-bottom: 40px;
+        }
+
+        .faq-list dt {
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .faq-list dt::before {
+            content: "Q. ";
+        }
+
+        .faq-list dd::before {
+            content: "A. ";
+            font-weight: bold;
+            margin-left: -20px;
+        }
+
+        .date {
+            padding-block: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="translate_container">
+        <button class="translate_trigger">翻訳言語を選択</button>
+        <div id="google_translate_element"></div>
+        <div id="custom_lang_dropdown">
+            <div id="custom_lang_list" class="custom_lang_list">
+                <!-- 追加されたカスタム言語リスト -->
+            </div>
+        </div>
+    </div>
+
+    <div class="translate_text">
+        <h2>翻訳ボタンテスト</h2>
+        <p>右上のボタンをクリックし任意の言語のボタンをクリックするとページ内の文章が翻訳されます。</p>
+    </div>
+
+    <div class="settings">
+        <h2>設置のやりかた</h2>
+        <ul>
+            <li>translator.cssとtranslator.jsをダウンロード</li>
+            <li>html内、bodyタグ下のどこかに上記ファイルと
+                &lt;script
+                src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"&gt;&lt;/script&gt;
+                を設置<br>
+                jsファイルはtranslator.js → element.js の順で設置してください
+            </li>
+            <li>
+                bodyタグ下のどこかに以下タグを追加
+                <pre>
+&lt;div class="translate_container"&gt;
+    &lt;button class="translate_trigger"&gt;翻訳言語を選択&lt;/button&gt;
+    &lt;div id="google_translate_element"&gt;&lt;/div&gt;
+    &lt;div id="custom_lang_dropdown"&gt;
+        &lt;div id="custom_lang_list" class="custom_lang_list"&gt;
+            &lt;!-- 追加されたカスタム言語リスト --&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+            </li>
+            <li>必要に応じてcssやjsを編集</li>
+        </ul>
+    </div>
+
+    <div class="faq">
+        <h2>・FAQ</h2>
+        <dl class="faq-list">
+            <dt>どのサイトでも使えますか？</dt>
+            <dd>必要なのはjsファイルとCSSと特定のタグのみなのでサイトに既存のライブラリとバッティングしない限りはどのサイトでも使えると思います<br>
+                たぶんECページにも使えますが動作未確認です</dd>
+
+            <dt>言語の設定はどこからすればいいですか？</dt>
+            <dd>デフォ言語は translator.js 内の pageLanguage で指定、 翻訳したい言語は includedLanguages を編集すれば設定できます<br>
+                言語のフラッグの表示を変えたいときは getFlagCode の map を編集してください</dd>
+
+            <dt>iPadで見たら翻訳ウィジェットが出てこないときと出てくるときがあるんですがなんでですか？</dt>
+            <dd>おおむねiOSとGoogle翻訳ウィジェットの相性問題のせいです<br>
+                このふたつの相性が非常に悪いためこちら側でどのような実装をしても完全に正しく表示するのは難しい状態です<br>
+                そして翻訳ウィジェットはほとんど更新されていないのでこれが解決する可能性も低いです</dd>
+        </dl>
+
+    </div>
+
+    <div class="bug">
+        <h2>・バグ</h2>
+        <p>
+            <strong>
+                他言語のボタンをクリック →
+                日本語(というか pageLanguage で設定したデフォ言語)のボタンをクリック →
+                他言語のボタンをクリック<br>
+                という動作を行うと翻訳が正しく切り替わらない</strong><br>
+            日本語のボタンをクリックすると1回でhtmlのlang属性が auto に戻らず一旦 ja になり、その後任意の翻訳ボタンを選択すると再び auto に戻るためだと思います<br>
+            Google翻訳ウィジェットはlang属性がautoでないとデフォ言語でも翻訳が走ってしまうため pageLanguage の設定が必須ですが、そうすると上記の現象が生じます<br>
+            google-language-translator プラグインは一発で auto に切り替わるっぽいですがどうやってこの仕様を吸収してるのか謎です<br>
+            現状は pageLanguage で設定した言語が選択された場合セッションクッキーを破棄 → ページをリロードし翻訳がなされていないイニシャルなページを表示するという力技方式で無理やり解決しています<br>
+            これについては他の根本的な解決策を模索中です
+        </p>
+    </div>
+
+    <p>おわり</p>
+
+    <div class="date">
+        <p>2025/12/10 作成</p>
+    </div>
+
+    <!-- scripts -->
+    <script src="./assets/translator.js"></script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+
+</html>
