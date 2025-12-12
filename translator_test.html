@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -8,62 +9,71 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="./assets/translator.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-        }
+body{
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 20px;
+}
 
-        .settings {
-            background-color: #f9f9f9;
-            border: 1px solid #cccccc;
-            line-break: strict;
-            margin-top: 40px;
-            overflow-wrap: anywhere;
-            padding: 20px;
-            word-break: normal;
-        }
+.settings{
+  background-color: #f9f9f9;
+  border: 1px solid #cccccc;
+  line-break: strict;
+  margin-top: 40px;
+  overflow-wrap: anywhere;
+  padding: 20px;
+  word-break: normal;
+}
 
-        .settings pre {
-            background-color: #f9f9f9;
-            border: 1px solid #cccccc;
-            color: #444444;
-            margin-top: 10px;
-            overflow-x: scroll;
-            padding: 20px;
-        }
+.settings pre{
+  background-color: #f9f9f9;
+  border: 1px solid #cccccc;
+  color: #444444;
+  margin-top: 10px;
+  overflow-x: scroll;
+  padding: 20px;
+}
 
-        .settings h2 {
-            margin-top: 0;
-        }
+.settings h2{
+  margin-top: 0;
+}
 
-        .faq {
-            margin-block: 40px;
-        }
+.faq{
+  margin-block: 40px;
+}
 
-        .faq-list {
-            margin-bottom: 40px;
-        }
+.faq-list{
+  margin-bottom: 40px;
+}
 
-        .faq-list dt {
-            font-weight: bold;
-            margin-top: 15px;
-        }
+.faq-list dt{
+  font-weight: bold;
+  margin-top: 15px;
+}
 
-        .faq-list dt::before {
-            content: "Q. ";
-        }
+.faq-list dt::before{
+  content: "Q. ";
+}
 
-        .faq-list dd::before {
-            content: "A. ";
-            font-weight: bold;
-            margin-left: -20px;
-        }
+.faq-list dd::before{
+  content: "A. ";
+  font-weight: bold;
+  margin-left: -20px;
+}
 
-        .date {
-            padding-block: 20px;
-            text-align: right;
-        }
+.date{
+  padding-block: 20px;
+  text-align: right;
+}
+
+.date p{
+  margin-block: 0;
+}
+
+.date p + p{
+  margin-top: .5em;
+}
+
     </style>
 </head>
 
@@ -135,23 +145,31 @@
     <div class="bug">
         <h2>・バグ</h2>
         <p>
-            <strong>
-                他言語のボタンをクリック →
-                日本語(というか pageLanguage で設定したデフォ言語)のボタンをクリック →
-                他言語のボタンをクリック<br>
-                という動作を行うと翻訳が正しく切り替わらない</strong><br>
-            日本語のボタンをクリックすると1回でhtmlのlang属性が auto に戻らず一旦 ja になり、その後任意の翻訳ボタンを選択すると再び auto に戻るためだと思います<br>
-            Google翻訳ウィジェットはlang属性がautoでないとデフォ言語でも翻訳が走ってしまうため pageLanguage の設定が必須ですが、そうすると上記の現象が生じます<br>
-            google-language-translator プラグインは一発で auto に切り替わるっぽいですがどうやってこの仕様を吸収してるのか謎です<br>
-            現状は pageLanguage で設定した言語が選択された場合セッションクッキーを破棄 → ページをリロードし翻訳がなされていないイニシャルなページを表示するという力技方式で無理やり解決しています<br>
-            これについては他の根本的な解決策を模索中です
+            <s>
+                <strong>
+                    他言語のボタンをクリック →
+                    日本語(というか pageLanguage で設定したデフォ言語)のボタンをクリック →
+                    他言語のボタンをクリック<br>
+                    という動作を行うと翻訳が正しく切り替わらない</strong><br>
+                日本語のボタンをクリックすると1回でhtmlのlang属性が auto に戻らず一旦 ja になり、その後任意の翻訳ボタンを選択すると再び auto に戻るためだと思います<br>
+                Google翻訳ウィジェットはlang属性がautoでないとデフォ言語でも翻訳が走ってしまうため pageLanguage の設定が必須ですが、そうすると上記の現象が生じます<br>
+                google-language-translator プラグインは一発で auto に切り替わるっぽいですがどうやってこの仕様を吸収してるのか謎です<br>
+                現状は pageLanguage で設定した言語が選択された場合セッションクッキーを破棄 → ページをリロードし翻訳がなされていないイニシャルなページを表示するという力技方式で無理やり解決しています<br>
+                これについては他の根本的な解決策を模索中です
+            </s>
         </p>
+        <p>↑ 2025/12/12 上記解決しました<br>他のバグが出たら教えてください</p>
     </div>
 
     <p>おわり</p>
 
     <div class="date">
-        <p>2025/12/10 作成</p>
+        <p>2025/12/10<br>
+            作成 </p>
+        <p>2025/12/12<br>
+            他言語ボタンクリック → 日本語ボタンクリック時のバグを修正<br>
+            ドキュメント更新<br>
+            ついでにドキュメントの書式変更(日付左 コメント右 →日付上 コメント下)</p>
     </div>
 
     <!-- scripts -->
