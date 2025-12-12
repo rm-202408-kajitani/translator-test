@@ -74,7 +74,7 @@
     // =====================================================
 
     // デバウンス付きリスト再構築
-    let rebuildTimer;
+    let rebuildTimer; // タイマーIDを上書きして保持し続ける
     const safeBuildCustomList = (comboSelect, languagesConfig) => {
         clearTimeout(rebuildTimer);
         rebuildTimer = setTimeout(() => {
@@ -83,8 +83,7 @@
     };
 
     // listItem に言語選択イベントを追加
-    // 直前の選択言語を保持
-    let lastSelectedLang = null;
+    let lastSelectedLang = null; // 直前の選択言語を保持する
     const attachListItemListener = (listItem, langCode, comboSelect) => {
         listItem.addEventListener('click', (event) => {
             event.preventDefault();
@@ -102,23 +101,20 @@
             // セレクトへ反映
             comboSelect.value = langCode;
 
-            // 他言語 → pageLanguage のときだけ 2回通知
+            // 選択値変更を翻訳ライブラリに通知
+            comboSelect.dispatchEvent(new Event('change'));
+
+            // 他言語 → pageLanguage のときだけ2回目を遅延して通知
             const isBackToPageLanguage =
                 langCode === pageLanguage &&
                 prevLang &&
                 prevLang !== pageLanguage;
 
-            // 選択値変更を翻訳ライブラリに通知する分岐
             if (isBackToPageLanguage) {
-                comboSelect.dispatchEvent(new Event('change')); // 1回目
-
-                // microtask に回して 2回目を発火
+                // microtask に回して2回目を発火
                 Promise.resolve().then(() => {
                     comboSelect.dispatchEvent(new Event('change'));
                 });
-            } else {
-                // 通常の1回通知
-                comboSelect.dispatchEvent(new Event('change'));
             }
 
             // ドロップダウンを閉じる
