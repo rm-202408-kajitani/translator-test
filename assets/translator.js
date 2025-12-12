@@ -83,26 +83,49 @@
     };
 
     // listItem に言語選択イベントを追加
+    // 直前の選択言語を保持
+    let lastSelectedLang = null;
     const attachListItemListener = (listItem, langCode, comboSelect) => {
         listItem.addEventListener('click', (event) => {
             event.preventDefault();
+
+            // 同じ言語をクリックした場合は何もせず終了
+            if (lastSelectedLang === langCode) {
+                body.classList.remove('show-translate');
+                return;
+            }
+
+            // 言語を記録更新
+            const prevLang = lastSelectedLang;
+            lastSelectedLang = langCode;
+
+            // セレクトへ反映
             comboSelect.value = langCode;
 
-            if (langCode === pageLanguage) {
-                // pageLanguage に設定した言語が選択された場合セッションクッキーを破棄してからリロード
-                document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-                window.location.reload();  // ページをリロードして翻訳無効
-              } else {
-                // 他の言語が選択された場合翻訳を有効にする
+            // 他言語 → pageLanguage のときだけ 2回通知
+            const isBackToPageLanguage =
+                langCode === pageLanguage &&
+                prevLang &&
+                prevLang !== pageLanguage;
+
+            // 選択値変更を翻訳ライブラリに通知する分岐
+            if (isBackToPageLanguage) {
+                comboSelect.dispatchEvent(new Event('change')); // 1回目
+
+                // microtask に回して 2回目を発火
+                Promise.resolve().then(() => {
+                    comboSelect.dispatchEvent(new Event('change'));
+                });
+            } else {
+                // 通常の1回通知
                 comboSelect.dispatchEvent(new Event('change'));
-              }
+            }
 
-            // 選択値変更を翻訳ライブラリに通知
-
-            // ウィジェット非表示
+            // ドロップダウンを閉じる
             body.classList.remove('show-translate');
         });
     };
+
 
     // カスタム翻訳リストを再構築(全削除 → 再生成)
     const buildCustomList = (comboSelect, languagesConfig) => {
@@ -233,5 +256,4 @@
         }
     });
 })();
-
 
